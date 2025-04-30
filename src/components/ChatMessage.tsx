@@ -1,6 +1,7 @@
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ChatAttachment, { ChatAttachmentProps } from "./ChatAttachment";
 
 export interface ChatMessageProps {
   username: string;
@@ -8,7 +9,9 @@ export interface ChatMessageProps {
   timestamp: string;
   isStreamer?: boolean;
   isModerator?: boolean;
+  isBot?: boolean;
   avatarUrl?: string;
+  attachment?: ChatAttachmentProps;
 }
 
 const ChatMessage = ({
@@ -17,7 +20,9 @@ const ChatMessage = ({
   timestamp,
   isStreamer = false,
   isModerator = false,
+  isBot = false,
   avatarUrl,
+  attachment,
 }: ChatMessageProps) => {
   return (
     <div className="flex items-start gap-2 p-2 animate-fade-in">
@@ -33,16 +38,25 @@ const ChatMessage = ({
             className={cn(
               "font-medium text-sm truncate",
               isStreamer ? "text-stream-purple" : "",
-              isModerator ? "text-green-400" : ""
+              isModerator ? "text-green-400" : "",
+              isBot ? "text-stream-blue" : ""
             )}
           >
             {username}
             {isStreamer && <span className="ml-1 text-xs px-1 bg-stream-purple text-white rounded">Host</span>}
             {isModerator && <span className="ml-1 text-xs px-1 bg-green-600 text-white rounded">Mod</span>}
+            {isBot && <span className="ml-1 text-xs px-1 bg-stream-blue text-white rounded">Bot</span>}
           </span>
           <span className="text-xs text-gray-400">{timestamp}</span>
         </div>
         <p className="text-sm break-words">{message}</p>
+        {attachment && (
+          <ChatAttachment
+            filename={attachment.filename}
+            fileType={attachment.fileType}
+            fileUrl={attachment.fileUrl}
+          />
+        )}
       </div>
     </div>
   );
